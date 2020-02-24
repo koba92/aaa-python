@@ -12,7 +12,6 @@ def create_field():
             n=0
         if (n>=3)&(n<=5):
             field=np.zeros((n,n))
-            created=True
             return field
         else:
             print('Incorrect input, try again!')
