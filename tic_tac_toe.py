@@ -1,7 +1,6 @@
 import numpy as np
 from typing import Iterable
 
-
 ROW_NAMES=['a','b','c','d','e']
 
 def create_field():
@@ -13,6 +12,7 @@ def create_field():
             n=0
         if (n>=3)&(n<=5):
             field=np.zeros((n,n))
+            created=True
             return field
         else:
             print('Incorrect input, try again!')
@@ -119,24 +119,34 @@ def check_diag(field: Iterable, checked_value: int) -> bool:
 
 def check_win(field: Iterable, current_player: int) -> bool:
     """Function checks if current player has won the game"""
-    if current_player==1:
-        checked_value=1
-    else:
-        checked_value=-1
-    win_diag=check_diag(field, checked_value)
-    win_row=check_rows(field, checked_value)
-    win_col=check_columns(field, checked_value)
+    win_diag=check_diag(field, current_player)
+    win_row=check_rows(field, current_player)
+    win_col=check_columns(field, current_player)
     return win_diag|win_row|win_col
+
+def check_draw(field: Iterable) -> bool:
+    """Functions checks if it draw"""
+    draw=True
+    for i in range(len(field)):
+        for j in range(len(field)):
+            if field[i,j]==0:
+                draw=False
+    return draw
     
 field=create_field()
 current_player=1
 win=False
-while not win:
+draw=False
+while not win|draw:
     draw_field(field)
     move=get_move(field, current_player)
-    field[move[0],move[1]]=-current_player*2+3
+    field[move[0],move[1]]=current_player
     win=check_win(field, current_player)
+    draw=check_draw(field)
     current_player=switch_player(current_player)
 draw_field(field)
 current_player=switch_player(current_player)
-print(f'Player{current_player} won!')
+if win:
+    print(f'Player{current_player} won!')
+else:
+    print('It is draw!')
